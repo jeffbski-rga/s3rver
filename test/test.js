@@ -974,21 +974,21 @@ describe("S3rver Tests", function() {
     const upload = await s3Client
       .createMultipartUpload({
         Bucket: buckets[0].name,
-        Key: 'merged'
+        Key: "merged"
       })
       .promise();
     await s3Client
       .upload({
         Bucket: buckets[0].name,
-        Key: 'part',
-        Body: Buffer.alloc(20 * Math.pow(1024, 2)), // 20MB
+        Key: "part",
+        Body: Buffer.alloc(20 * Math.pow(1024, 2)) // 20MB
       })
       .promise();
     const data = await s3Client
       .uploadPartCopy({
         CopySource: `${buckets[0].name}/part`,
         Bucket: buckets[0].name,
-        Key: 'destination',
+        Key: "destination",
         PartNumber: 1,
         UploadId: upload.UploadId
       })
@@ -998,16 +998,18 @@ describe("S3rver Tests", function() {
     await s3Client
       .completeMultipartUpload({
         Bucket: buckets[0].name,
-        Key: 'desintation',
+        Key: "desintation",
         UploadId: upload.UploadId,
         MultipartUpload: {
-          Parts: [{
-            ETag: data.CopyPartResult.ETag,
-            PartNumber: 1
-          }]
+          Parts: [
+            {
+              ETag: data.CopyPartResult.ETag,
+              PartNumber: 1
+            }
+          ]
         }
       })
-      .promise()
+      .promise();
   });
 
   it("should copy parts from bucket to bucket", async function() {
@@ -1020,15 +1022,15 @@ describe("S3rver Tests", function() {
     await s3Client
       .upload({
         Bucket: buckets[1].name,
-        Key: 'part',
-        Body: Buffer.alloc(20 * Math.pow(1024, 2)), // 20MB
+        Key: "part",
+        Body: Buffer.alloc(20 * Math.pow(1024, 2)) // 20MB
       })
       .promise();
     const data = await s3Client
       .uploadPartCopy({
         CopySource: `${buckets[1].name}/part`,
         Bucket: buckets[0].name,
-        Key: 'destination',
+        Key: "destination",
         PartNumber: 1,
         UploadId: upload.UploadId
       })
