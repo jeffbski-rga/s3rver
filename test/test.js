@@ -994,6 +994,7 @@ describe("S3rver Tests", function() {
       })
       .promise();
     expect(data.CopyPartResult.ETag).to.be.ok;
+    expect(JSON.parse(data.CopyPartResult.ETag)).to.be.ok;
   });
 
   it("should copy parts from bucket to bucket", async function() {
