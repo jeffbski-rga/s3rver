@@ -994,7 +994,33 @@ describe("S3rver Tests", function() {
       })
       .promise();
     expect(data.CopyPartResult.ETag).to.be.ok;
-  })
+  });
+
+  it("should copy parts from bucket to bucket", async function() {
+    const upload = await s3Client
+      .createMultipartUpload({
+        Bucket: buckets[0].name,
+        Key: `merged`
+      })
+      .promise();
+    await s3Client
+      .upload({
+        Bucket: buckets[1].name,
+        Key: 'part',
+        Body: Buffer.alloc(20 * Math.pow(1024, 2)), // 20MB
+      })
+      .promise();
+    const data = await s3Client
+      .uploadPartCopy({
+        CopySource: `${buckets[1].name}/part`,
+        Bucket: buckets[0].name,
+        Key: 'destination',
+        PartNumber: 1,
+        UploadId: upload.UploadId
+      })
+      .promise();
+    expect(data.CopyPartResult.ETag).to.be.ok;
+  });
 
   it("should find a text file in a multi directory path", async function() {
     await s3Client
