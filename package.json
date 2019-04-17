@@ -1,6 +1,6 @@
 {
   "name": "s3rver",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Fake S3 server for node",
   "keywords": [
     "fake",
@@ -68,7 +68,7 @@
     "md5": "2.2.1",
     "mocha": "6.1.3",
     "moment": "2.24.0",
-    "prettier": "1.16.4",
+    "prettier": "1.17.0",
     "prettier-check": "2.0.0",
     "promise-limit": "2.7.0",
     "request": "2.88.0",
