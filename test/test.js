@@ -975,7 +975,8 @@ describe("S3rver Tests", function() {
       .createMultipartUpload({
         Bucket: buckets[0].name,
         Key: `merged`
-      }).promise();
+      })
+      .promise();
     await s3Client
       .upload({
         Bucket: buckets[0].name,
@@ -992,7 +993,7 @@ describe("S3rver Tests", function() {
         UploadId: upload.UploadId
       })
       .promise();
-    expect(data.CopyPartResult.ETag).to.be.ok();
+    expect(data.CopyPartResult.ETag).to.be.ok;
   })
 
   it("should find a text file in a multi directory path", async function() {
