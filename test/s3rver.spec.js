@@ -10,7 +10,11 @@ const request = require('request-promise-native').defaults({
   resolveWithFullResponse: true,
 });
 
-const { createServerAndClient, generateTestObjects } = require('./helpers');
+const {
+  createServerAndClient,
+  generateTestObjects,
+  resetTmpDir,
+} = require('./helpers');
 
 const S3rver = require('../lib/s3rver');
 const { once } = require('../lib/utils');
@@ -279,5 +283,106 @@ describe('S3rver', () => {
       httpServer.close();
       await once(httpServer, 'close');
     }
+  });
+
+  describe('uploadPartCopy', () => {
+    const buckets = [
+      { name: 'bucket1' },
+      { name: 'bucket2' },
+      { name: 'bucket3' },
+      { name: 'bucket4' },
+      { name: 'bucket5' },
+      { name: 'bucket6' },
+    ];
+    let server;
+    let s3Client;
+
+    beforeEach('Reset buckets', resetTmpDir);
+    beforeEach('Start server and create buckets', async function() {
+      server = new S3rver({
+        configureBuckets: buckets,
+      });
+      const { port } = await server.run();
+
+      s3Client = new AWS.S3({
+        accessKeyId: 'S3RVER',
+        secretAccessKey: 'S3RVER',
+        endpoint: `http://localhost:${port}`,
+        sslEnabled: false,
+        s3ForcePathStyle: true,
+      });
+    });
+
+    afterEach('Close server', function(done) {
+      server.close(done);
+    });
+
+    it('should upload a part by copying it', async function() {
+      const upload = await s3Client
+        .createMultipartUpload({
+          Bucket: buckets[0].name,
+          Key: 'merged',
+        })
+        .promise();
+      await s3Client
+        .upload({
+          Bucket: buckets[0].name,
+          Key: 'part',
+          Body: Buffer.alloc(20 * Math.pow(1024, 2)), // 20MB
+        })
+        .promise();
+      const data = await s3Client
+        .uploadPartCopy({
+          CopySource: `${buckets[0].name}/part`,
+          Bucket: buckets[0].name,
+          Key: 'destination',
+          PartNumber: 1,
+          UploadId: upload.UploadId,
+        })
+        .promise();
+      expect(data.CopyPartResult.ETag).to.be.ok;
+      expect(JSON.parse(data.CopyPartResult.ETag)).to.be.ok;
+      await s3Client
+        .completeMultipartUpload({
+          Bucket: buckets[0].name,
+          Key: 'destination',
+          UploadId: upload.UploadId,
+          MultipartUpload: {
+            Parts: [
+              {
+                ETag: data.CopyPartResult.ETag,
+                PartNumber: 1,
+              },
+            ],
+          },
+        })
+        .promise();
+    });
+
+    it('should copy parts from bucket to bucket', async function() {
+      const upload = await s3Client
+        .createMultipartUpload({
+          Bucket: buckets[0].name,
+          Key: `merged`,
+        })
+        .promise();
+      await s3Client
+        .upload({
+          Bucket: buckets[1].name,
+          Key: 'part',
+          Body: Buffer.alloc(20 * Math.pow(1024, 2)), // 20MB
+        })
+        .promise();
+      const data = await s3Client
+        .uploadPartCopy({
+          CopySource: `${buckets[1].name}/part`,
+          Bucket: buckets[0].name,
+          Key: 'destination',
+          PartNumber: 1,
+          UploadId: upload.UploadId,
+        })
+        .promise();
+      expect(data.CopyPartResult.ETag).to.be.ok;
+    });
   });
 });
