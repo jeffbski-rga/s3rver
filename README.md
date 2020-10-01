@@ -6,6 +6,8 @@ S3rver is a lightweight server that responds to **some** of the same calls [Amaz
 
 The goal of S3rver is to minimise runtime dependencies and be more of a development tool to test S3 calls in your code rather than a production server looking to duplicate S3 functionality.
 
+[![Travis CI](https://travis-ci.org/jeffbski-rga/s3rver.svg?branch=master)](https://travis-ci.org/jeffbski-rga/s3rver)
+
 ## Supported methods
 
 ### Buckets
