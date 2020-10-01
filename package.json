@@ -1,5 +1,8 @@
 {
-  "name": "s3rver",
+  "name": "@jeffbski-rga/s3rver",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "3.6.1",
   "description": "Fake S3 server for node",
   "keywords": [
@@ -18,12 +21,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:jamhall/s3rver.git"
+    "url": "git@github.com:jeffbski-rga/s3rver.git"
   },
-  "bugs": {
-    "url": "https://github.com/jamhall/s3rver/issues"
-  },
-  "homepage": "https://github.com/jamhall/s3rver",
+  "homepage": "https://github.com/jeffbski-rga/s3rver",
   "scripts": {
     "test": "mocha",
     "eslint": "eslint --ignore-path .gitignore .",

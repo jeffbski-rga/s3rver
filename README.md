@@ -1,10 +1,6 @@
-# S3rver
+# @jeffbski-rga/s3rver
 
-[![NPM](https://nodei.co/npm/s3rver.png)](https://nodei.co/npm/s3rver/)
-
-[![Build Status](https://api.travis-ci.org/jamhall/s3rver.png)](https://travis-ci.org/jamhall/s3rver)
-[![Dependency Status](https://david-dm.org/jamhall/s3rver/status.svg)](https://david-dm.org/jamhall/s3rver)
-[![Devdependency Status](https://david-dm.org/jamhall/s3rver/dev-status.svg)](https://david-dm.org/jamhall/s3rver?type=dev)
+Fork which implements the multipart object copy
 
 S3rver is a lightweight server that responds to **some** of the same calls [Amazon S3](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html) responds to. It is extremely useful for testing S3 in a sandbox environment without actually making calls to Amazon.
 
@@ -34,7 +30,7 @@ The goal of S3rver is to minimise runtime dependencies and be more of a developm
 Install s3rver:
 
 ```bash
-$ npm install s3rver -g
+$ npm install @jeffbski-rga/s3rver -g
 ```
 
 You will now have a command on your path called _s3rver_
@@ -124,8 +120,10 @@ Creates a S3rver instance
 For your convenience, we've provided sample bucket configurations you can access using `require.resolve`:
 
 ```javascript
-const corsConfig = require.resolve('s3rver/example/cors.xml');
-const websiteConfig = require.resolve('s3rver/example/website.xml');
+const corsConfig = require.resolve('@jeffbski-rga/s3rver/example/cors.xml');
+const websiteConfig = require.resolve(
+  '@jeffbski-rga/s3rver/example/website.xml',
+);
 
 const s3rver = new S3rver({
   configureBuckets: [
@@ -151,7 +149,7 @@ Starts/stops the server on the configured port and host. Returns a Promise if no
 Example in mocha:
 
 ```javascript
-const S3rver = require('s3rver');
+const S3rver = require('@jeffbski-rga/s3rver');
 let instance;
 
 before(function(done) {
@@ -191,7 +189,7 @@ You can subscribe to notifications for PUT, POST, COPY and DELETE object events 
 Please refer to [AWS's documentation](http://docs.aws.amazon.com/AmazonS3/latest/dev/notification-content-structure.html) for details of event object.
 
 ```javascript
-const S3rver = require('s3rver');
+const S3rver = require('@jeffbski-rga/s3rver');
 const { fromEvent } = require('rxjs');
 const { filter } = require('rxjs/operators');
 
