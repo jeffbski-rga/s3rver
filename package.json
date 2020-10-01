@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.6.3",
+  "version": "3.6.4",
   "description": "Fake S3 server for node",
   "keywords": [
     "fake",
